@@ -1,7 +1,9 @@
-#include <iostream>
+ #include <iostream>
 #include <iterator>
 #include "FiniteField.h"
 using namespace std;
+
+//Tu byłem, Paweł
 
 int main()
 {
