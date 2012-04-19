@@ -17,8 +17,8 @@ int main()
 
     //memcpy(gen, a0, M*sizeof(int));
     FiniteField n(P,M, &a0[0], &gen[0]);
-    cout<<"0="<<n.genToStr()<<endl;
-    for(int i=0; i<8; ++i)
-        cout << "a^"<<i<< "=[" << n.elementToStr(i) << "]" << endl;
+    cout<<"\n0  =["<<n.elementToStr(0)<< "]"<<endl;
+    for(int i=1; i<8; ++i)
+        cout << "a^"<<i-1<< "=[" << n.elementToStr(i) << "]" << endl;
     return 0;
 }
