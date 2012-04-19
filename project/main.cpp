@@ -3,22 +3,26 @@
 #include "FiniteField.h"
 using namespace std;
 
-//Tu byłem, Paweł
+string generateAddTab(){}
 
 int main()
 {
     const int M=3;
     const int P=2;
-    int a0[]={1,0,0};
-    int gen[]={1,1,0}; //=0*x^2 + 1*x + 1*1
+    const int N=8;
+
+    int a0[] = {1, 0, 0};
+    int gen[] = {1, 1, 0}; //=0*x^2 + 1*x + 1*1
 
     std::cout<<"a0=["; std::copy(a0,a0+3, std::ostream_iterator<int>(std::cout, ",")); std::cout<<"]\n";
-    std::cout<<"gen=["; std::copy(gen,gen+3, std::ostream_iterator<int>(std::cout, ",")); std::cout<<"]\n";
+    std::cout<<"gen=["; std::copy(gen,gen+3, std::ostream_iterator<int>(std::cout, ",")); std::cout<<"]\n\n";
 
-    //memcpy(gen, a0, M*sizeof(int));
-    FiniteField n(P,M, &a0[0], &gen[0]);
-    cout<<"\n0  =["<<n.elementToStr(0)<< "]"<<endl;
-    for(int i=1; i<8; ++i)
-        cout << "a^"<<i-1<< "=[" << n.elementToStr(i) << "]" << endl;
+    FiniteField ff(P,M, &a0[0], &gen[0]);
+
+    for(int i=0; i<N; ++i){
+    	cout.width(3);
+        cout << ff.elementsLabelToStr(i);
+    	cout << "=[" << ff.elementToStr(i) << "]" << endl;
+    }
     return 0;
 }
