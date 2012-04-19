@@ -1,3 +1,6 @@
+#ifndef FINITEFIELD_H_
+#define FINITEFIELD_H_
+
 #include <cmath>
 #include <cstring>
 #include <string>
@@ -40,3 +43,5 @@ public:
     //return the i-th elment's label as string
     string elementsLabelToStr(int i);
 };
+
+#endif /* FINITEFIELD_H_*/

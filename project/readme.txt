@@ -2,6 +2,8 @@ compiling on windows:
 	required mingw32-make+gcc
 mingw32-make
 
+# v0.5 Dodane wyświetlanie tabliczki mnożenia i wrzucenie wszystkich funkcji do modułu functions.
+
 # v0.4 Dodany został plik FiniteField.cpp implementujący klasę FiniteField/
 	   Znaczna poprawa estetyki kodu. 
 

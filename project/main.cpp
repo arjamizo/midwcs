@@ -1,28 +1,23 @@
  #include <iostream>
 #include <iterator>
-#include "FiniteField.h"
-using namespace std;
+#include "functions.h"
 
-string generateAddTab(){}
+using namespace std;
 
 int main()
 {
     const int M=3;
     const int P=2;
-    const int N=8;
 
     int a0[] = {1, 0, 0};
     int gen[] = {1, 1, 0}; //=0*x^2 + 1*x + 1*1
 
-    std::cout<<"a0=["; std::copy(a0,a0+3, std::ostream_iterator<int>(std::cout, ",")); std::cout<<"]\n";
-    std::cout<<"gen=["; std::copy(gen,gen+3, std::ostream_iterator<int>(std::cout, ",")); std::cout<<"]\n\n";
+    FiniteField *ff = new FiniteField(P,M, &a0[0], &gen[0]);
 
-    FiniteField ff(P,M, &a0[0], &gen[0]);
+    cout << "\nGenerator:\n" << generatorToStr(ff);
+    cout << "\nElement's list:\n" << elementsListToStr(ff);
+    cout << "\nMultiplication tab:\n" << mulTabToStr(ff);
 
-    for(int i=0; i<N; ++i){
-    	cout.width(3);
-        cout << ff.elementsLabelToStr(i);
-    	cout << "=[" << ff.elementToStr(i) << "]" << endl;
-    }
+    delete ff;
     return 0;
 }
