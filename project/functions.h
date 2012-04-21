@@ -9,4 +9,6 @@ string elementsListToStr(FiniteField *ff);
 
 string mulTabToStr(FiniteField *ff);
 
+string addTabToStr(FiniteField *ff);
+
 #endif /* FUNCTIONS_H_ */

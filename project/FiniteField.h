@@ -7,7 +7,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <stdio.h>
-//#todo o profilerze w sprawozdaniu
+#include <iostream>
 
 using namespace std;
 class FiniteField {
@@ -16,9 +16,17 @@ private:
     const int m; //length
     const int n; //field size, p^m
     int **elements;
-    int * const generator ; //thats const because generator is just copy of pointer
+    int *generator, *zechArray, *index;
+    bool initiated;
 
     string intArrayToStr(int *ar);
+    int binToDec(int *ar);
+
+    //fills array with Zech's logarithms
+    void fillZechArray();
+
+    //returns absolute value of modulo
+    inline int absModulo(int v, int q)const{ int r = v%q; return (r<0 ? r+q : r); }
 
 public:
     //initiates elements
@@ -26,7 +34,8 @@ public:
     ~FiniteField();
 
     //fills elements table with values evaluated from formula s_{j+3}=s_{j}+s_{j+1}
-    void generate(int *a0, int *generator);
+    //return true if complete, unless false
+    bool generate(int *a0);
 
     //returns the generator as string
     inline string genToStr(){ return intArrayToStr(generator); }
@@ -42,6 +51,15 @@ public:
 
     //return the i-th elment's label as string
     string elementsLabelToStr(int i);
+
+    //return true if elements generated properly, unless false
+    inline bool isInitiated()const{ return initiated; }
+
+    //returns index of result
+    int xorElements(int x, int y);
+
+    //returns Zech(x)
+    int getZech(int x);
 };
 
 #endif /* FINITEFIELD_H_*/
