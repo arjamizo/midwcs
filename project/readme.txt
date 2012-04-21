@@ -2,6 +2,9 @@ compiling on windows:
 	required mingw32-make+gcc
 mingw32-make
 
+# v0.7 Poprawione błędy, wyświetlanie wyników w przeglądarce. Można już oddać.
+       W out.html przykładowy wydruk.
+
 # v0.6 Dodano wyliczanie logarytmów Zecha.
        Wyświetlanie tabliczki dodawania.
 

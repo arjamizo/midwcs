@@ -15,8 +15,11 @@ FiniteField::FiniteField(int p, int m, int *a0, int *generator) :
 
     initiated = generate(a0);
 
-    zechArray = new int[n-2];
-    fillZechArray();
+    if(initiated){
+		zechArray = new int[n-2];
+		initiated = fillZechArray();
+    }
+
 }
 
 FiniteField::~FiniteField(){
@@ -88,7 +91,7 @@ string FiniteField::elementsLabelToStr(int i){
 	return ss.str();
 }
 
-void FiniteField::fillZechArray(){
+bool FiniteField::fillZechArray(){
 	int filled=3, x=1, k, v, q=n-1, zech;
 	memset(zechArray, 0, (n-2)*sizeof(int));
 
@@ -124,6 +127,10 @@ void FiniteField::fillZechArray(){
 			++filled;
 		}
 	}
+	if(filled != n){
+		return false;
+	}
+	return true;
 }
 
 int FiniteField::getZech(int x){

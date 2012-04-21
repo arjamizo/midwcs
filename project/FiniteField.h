@@ -22,8 +22,8 @@ private:
     string intArrayToStr(int *ar);
     int binToDec(int *ar);
 
-    //fills array with Zech's logarithms
-    void fillZechArray();
+    //fills array with Zech's logarithms, returns true if complete
+    bool fillZechArray();
 
     //returns absolute value of modulo
     inline int absModulo(int v, int q)const{ int r = v%q; return (r<0 ? r+q : r); }
