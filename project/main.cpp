@@ -52,6 +52,10 @@ int main(){
     delete[] gen;
 
     out.close();
+    #ifdef _WIN32 || WIN32 || __WIN32 || __WIN32__
+    system("firefox out.html");
+    #else //maybe unix?
     system("firefox out.html&");
+    #endif
     return 0;
 }

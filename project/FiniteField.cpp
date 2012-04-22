@@ -81,10 +81,11 @@ int FiniteField::binToDec(int *ar){
 string FiniteField::elementsLabelToStr(int i){
 	stringstream ss;
 	if(i > 1){
-		ss << "a";
+		ss << "a<sup>";
 		if(i > 2){
 			ss << i-1;
 		}
+		ss<<"</sup>";
 	}else{
 		ss << i;
 	}

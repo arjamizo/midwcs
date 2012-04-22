@@ -1,6 +1,9 @@
-compiling on windows: 
+﻿compiling on windows: 
 	required mingw32-make+gcc
 mingw32-make
+
+# v0.7a Dodany tag sup przy potegach w out.html w celu zwiekszenia czytelności. 
+       Dodane materiał na pierwsze spotkanie. 
 
 # v0.7 Poprawione błędy, wyświetlanie wyników w przeglądarce. Można już oddać.
        W out.html przykładowy wydruk.
