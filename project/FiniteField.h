@@ -12,7 +12,10 @@
 using namespace std;
 
 extern "C"{
-	int bin_to_dec(int *tab, int n);
+	int	bin_to_dec(int *src, int n);
+	void mem_set(int *dst, int x, int n);
+	void mem_cpy(int *dst, int *src, int n);
+	int xor_elements(int *x, int *y, int n);
 }
 
 class FiniteField {

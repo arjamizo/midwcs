@@ -7,7 +7,7 @@ FiniteField::FiniteField(int p, int m, int *a0, int *generator) :
 	index = new int[n];
 
 	this->generator = new int[m];
-	memcpy(this->generator, generator, m*sizeof(int));
+	mem_cpy(this->generator, generator, m);
 
     elements = new int*[n];
     for(int i=0; i<n; ++i)
@@ -35,15 +35,15 @@ FiniteField::~FiniteField(){
 
 bool FiniteField::generate(int *a0) {
 	int num;
-	memset(index, 0, n*sizeof(int));
+	mem_set(index, 0, n);
 	index[0] = 0;
 
-  	memset(elements[0], 0, m*sizeof(int));
-    memcpy(elements[1], a0, m*sizeof(int));
+  	mem_set(elements[0], 0, m);
+    mem_cpy(elements[1], a0, m);
     index[binToDec(a0)] = 1;
 
     for(int i=2; i<n; ++i) {
-        memcpy(elements[i], elements[i-1]+1, (m-1)*sizeof(int));
+        mem_cpy(elements[i], elements[i-1]+1, m-1);
         int sum=0;
         for(int j=0; j<m; ++j) {
                 sum += generator[j] * elements[i-1][j];
@@ -67,10 +67,6 @@ string FiniteField::intArrayToStr(int *ar){
     return ss.str();
 }
 
-int FiniteField::binToDec(int *ar){
-	return bin_to_dec(ar, m);
-}
-
 string FiniteField::elementsLabelToStr(int i){
 	stringstream ss;
 	if(i > 1){
@@ -87,7 +83,7 @@ string FiniteField::elementsLabelToStr(int i){
 
 bool FiniteField::fillZechArray(){
 	int filled=3, x=1, k, v, q=n-1, zech;
-	memset(zechArray, 0, (n-2)*sizeof(int));
+	mem_set(zechArray, 0, n-2);
 
 	for(x=0; !generator[x+1] && x<m-1; ++x);
 	zechArray[x] = m;
@@ -136,11 +132,9 @@ int FiniteField::getZech(int x){
 }
 
 int FiniteField::xorElements(int x, int y){
-	int result=0, base=1;
+	return index[xor_elements(elements[x], elements[y], m)];
+}
 
-	for(int i=0; i<m; ++i){
-		result += base*(elements[x][i] xor elements[y][i]);
-		base *= 2;
-	}
-	return index[result];
+int FiniteField::binToDec(int *ar){
+	return bin_to_dec(ar, m);
 }

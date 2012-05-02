@@ -36,26 +36,23 @@ int main(){
     	}
     	ff = new FiniteField(P, M, a0, gen);
     }
-    out << "<html><head><style type=\"text/css\">td{ text-align: center; } </style></head><body>" << endl;
+    out << startHtml();
     if(ff->isInitiated()){
-		out << "<b>Generator:</b><br/>\n" << generatorToStr(ff);
-		out << "<br/><hr/>\n<b>Element's list:</b><br/>\n" << elementsListToStr(ff);
-		out << "<br/><hr/>\n<b>Multiplication tab:</b><br/>\n" << mulTabToStr(ff);
-		out << "<br/><hr/>\n<b>Addition tab:</b><br/>\n" << addTabToStr(ff);
+		out << h3("Generator:") << generatorToStr(ff);
+		out << hr() << h3("Zech tab:") << zechTabToStr(ff);
+		out << hr() << h3("Element's list:") << elementsListToStr(ff);
+		out << hr() << h3("Multiplication tab:") << mulTabToStr(ff);
+		out << hr() << h3("Addition tab:") << addTabToStr(ff);
     }else{
     	out << "Wrong generator!" << endl;
     }
-    out << "</body></html>";
+    out << endHtml();
 
     delete ff;
     delete[] a0;
     delete[] gen;
 
     out.close();
-    #ifdef _WIN32 || WIN32 || __WIN32 || __WIN32__
     system("firefox out.html");
-    #else //maybe unix?
-    system("firefox out.html&");
-    #endif
     return 0;
 }

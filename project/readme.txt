@@ -2,6 +2,8 @@
 	required mingw32-make+gcc
 mingw32-make
 
+# v0.9  Dodano kolejne funkcje w asm oraz poprawiono wyświetlanie w HTML.
+
 # v0.8  Dodana pierwsza funkcja w asemblerze(bin_to_dec).
 
 # v0.7a Dodany tag sup przy potegach w out.html w celu zwiekszenia czytelności. 
