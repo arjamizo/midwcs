@@ -10,6 +10,11 @@
 #include <iostream>
 
 using namespace std;
+
+extern "C"{
+	int bin_to_dec(int *tab, int n);
+}
+
 class FiniteField {
 private:
     const int p; //base

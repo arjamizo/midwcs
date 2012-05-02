@@ -8,7 +8,7 @@ using namespace std;
 int main(){
 	ofstream out("out.html");
 
-    int M=8;
+    int M ;
     int P=2;
     cout << "M(1, 8): ";
     cin >> M;

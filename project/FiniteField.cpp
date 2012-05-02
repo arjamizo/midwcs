@@ -68,14 +68,7 @@ string FiniteField::intArrayToStr(int *ar){
 }
 
 int FiniteField::binToDec(int *ar){
-	int result=0;
-	int  base=1;
-
-	for(int i=0; i<m; ++i){
-		result += base*ar[i];
-		base *= p;
-	}
-	return result;
+	return bin_to_dec(ar, m);
 }
 
 string FiniteField::elementsLabelToStr(int i){
