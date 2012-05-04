@@ -109,7 +109,7 @@ string mulTabToStr(FiniteField *ff){
 
 string addTabToStr(FiniteField *ff){
 	stringstream ss;
-	int n = ff->getElementCount(), k, x, y;
+	int n = ff->getElementCount();
 
 	ss << startTable() << startTr() << startTh() << endTh();
 		for(int i=0; i<n; ++i){
@@ -120,18 +120,7 @@ string addTabToStr(FiniteField *ff){
 			ss << startTr();
 			ss << startTh() << ff->elementsLabelToStr(i) << endTh();
 		for(int j=0; j<n; ++j){
-			if(i && j){
-				if(i-j){
-					x = min(i, j);
-					y = max(i, j);
-					k = (x + ff->getZech(y-x-1) - 1) % (n-1) + 1;
-				}else{
-					k = 0;
-				}
-			}else{
-				k = i+j;
-			}
-			ss << startTd() << ff->elementsLabelToStr(k) << endTd();
+			ss << startTd() << ff->elementsLabelToStr(ff->addElements(i, j)) << endTd();
 		}
 		ss << endTr();
 	}

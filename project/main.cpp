@@ -8,34 +8,37 @@ using namespace std;
 int main(){
 	ofstream out("out.html");
 
-    int M ;
+    int M;
     int P=2;
     cout << "M(1, 8): ";
+
     cin >> M;
 
     int *a0 = new int[M];
-    memset(a0, 0, M*sizeof(int));
+    mem_set(a0, 0, M);
     a0[0] = 1;
     int *gen = new int[M];
 
     FiniteField *ff = 0;
 
-    for(int i=0; !ff || !ff->isInitiated(); ++i){
-    	if(ff){
-    		delete ff;
-    	}
-    	int tmp=i, base;
-    	for(int j=M-1; j>-1; --j){
-    		base = (int)pow(2.0, j);
-    		if(tmp / base){
-    			gen[j] = 1;
-    		}else{
-    			gen[j] = 0;
-    		}
-    		tmp %= base;
-    	}
-    	ff = new FiniteField(P, M, a0, gen);
-    }
+	for(int i=1; !ff || !ff->isInitiated(); ++i){
+		if(ff){
+			delete ff;
+			ff = 0;
+		}
+		int tmp=i, base;
+		for(int j=M-1; j>-1; --j){
+			base = (int)pow(2.0, j);
+			if(tmp / base){
+				gen[j] = 1;
+			}else{
+				gen[j] = 0;
+			}
+			tmp %= base;
+		}
+		ff = new FiniteField(P, M, a0, gen);
+
+	}
     out << startHtml();
     if(ff->isInitiated()){
 		out << h3("Generator:") << generatorToStr(ff);

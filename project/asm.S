@@ -3,7 +3,68 @@
 .section .text
 
 ########################################
-## int bin_to_dec(int *src, n);
+## int abs_modulo(long int x, long int q);
+########################################
+
+.globl	abs_modulo
+	.type	abs_modulo, @function
+abs_modulo:
+	xor		%rdx, %rdx
+	mov		%rdi, %rax
+	div		%rsi
+	mov		%rdx, %rax
+
+	and		%rax, %rax
+	jns		abs_modulo_finish
+	add		%rsi, %rax
+abs_modulo_finish:
+	ret
+
+########################################
+## int add_elements(int x, int y, int *zech, int n);
+########################################
+
+.globl	add_elements
+	.type	add_elements, @function
+add_elements:
+	mov		%rdi, %rax
+
+	and		%rdi, %rdi
+	jz		add_elements_zero
+	and		%rsi, %rsi
+	jz		add_elements_zero
+
+	jmp		add_elements_skip_zero
+add_elements_zero:
+	add		%rsi, %rax
+	jmp		add_elements_finish
+add_elements_skip_zero:
+
+	sub		%rsi, %rax
+	jnz		add_elements_skip_equal
+	xor		%rax, %rax
+	jmp add_elements_finish
+
+add_elements_skip_equal:
+	jns		add_elements_abs
+	neg		%rax
+	xchg	%rsi, %rdi
+add_elements_abs:
+	dec		%rax
+	mov		(%rdx, %rax, 4), %eax
+	add		%rsi, %rax
+	dec		%rax
+	xor		%rdx, %rdx
+	dec		%rcx
+	div		%rcx
+	inc		%rdx
+	mov		%rdx, %rax
+add_elements_finish:
+
+	ret
+
+########################################
+## int bin_to_dec(int *src, int n);
 ########################################
 
 .globl	bin_to_dec
@@ -19,6 +80,87 @@ bin_to_dec_loop:
 	and		%rsi, %rsi
 	jnz		bin_to_dec_loop
 
+	ret
+
+########################################
+## int generate(int *a0(10), int *gen(11), int **elements(12), int *index(13), int n(8), int m(9));
+########################################
+
+.globl	generate
+	.type	generate, @function
+generate:
+	mov		%rdi, %r10
+	mov		%rsi, %r11
+	mov		%rdx, %r12
+	mov		%rcx, %r13
+
+	mov		%r13, %rdi
+	xor		%rsi, %rsi
+	mov		%r8, %rdx
+	call	mem_set
+
+	mov		(%r12), %rdi
+	mov		%r9, %rdx
+	call	mem_set
+
+	mov		8(%r12), %rdi
+	mov		%r10, %rsi
+	mov		%r9, %rdx
+	call	mem_cpy
+
+	mov		%r10, %rdi
+	mov		%r9, %rsi
+	call	bin_to_dec
+	movl	$1, (%r13, %rax, 4)
+
+	mov		$2, %r14
+generate_main_loop:
+	cmp		%r14, %r8
+	jle		generate_finish
+
+	mov		(%r12, %r14, 8), %rdi
+	mov		%r14, %rdx
+	dec		%rdx
+	mov		(%r12, %rdx, 8), %rsi
+	mov		%rsi, %r15
+	add		$4, %rsi
+	mov		%r9, %rdx
+	dec		%rdx
+	call	mem_cpy
+
+	xor		%rax, %rax
+	mov		%r9, %rcx
+generate_gen_loop:
+	dec		%rcx
+
+	mov		(%r11, %rcx, 4), %edx
+	and		(%r15, %rcx, 4), %edx
+	xor		%rdx, %rax
+
+	and		%rcx, %rcx
+	jnz		generate_gen_loop
+
+	mov		(%r12, %r14, 8), %rdi
+	mov		%r9, %rsi
+	dec		%rsi
+	mov		%eax, (%rdi, %rsi, 4)
+
+	mov		%r9, %rsi
+	call	bin_to_dec
+
+	mov		(%r13, %rax, 4), %edx
+	and		%rdx, %rdx
+	jz		generate_skip_fail
+
+	xor		%rax, %rax
+generate_skip_fail:
+
+	mov		%r14, %rdx
+	mov		%edx, (%r13, %rax, 4)
+
+	inc		%r14
+	jmp		generate_main_loop
+generate_finish:
 	ret
 
 ########################################
@@ -48,6 +190,24 @@ mem_set:
 	and		%rdx, %rdx
 	jnz		mem_set
 
+	ret
+
+########################################
+## int powa(long int x, int y);
+########################################
+
+.globl	powa
+	.type	powa, @function
+powa:
+	mov		$1, %rax
+powa_loop:
+	and		%rsi, %rsi
+	jz		powa_finish
+	dec		%rsi
+
+	imul	%rdi
+	jmp		powa_loop
+powa_finish:
 	ret
 
 ########################################

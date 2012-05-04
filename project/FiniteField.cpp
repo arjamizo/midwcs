@@ -23,7 +23,9 @@ FiniteField::FiniteField(int p, int m, int *a0, int *generator) :
 }
 
 FiniteField::~FiniteField(){
-	delete[] zechArray;
+	if(initiated){
+		delete[] zechArray;
+	}
 
     for(int i=0; i<n; ++i){
         delete[] elements[i];
@@ -31,33 +33,6 @@ FiniteField::~FiniteField(){
     delete[] elements;
     delete[] generator;
     delete[] index;
-}
-
-bool FiniteField::generate(int *a0) {
-	int num;
-	mem_set(index, 0, n);
-	index[0] = 0;
-
-  	mem_set(elements[0], 0, m);
-    mem_cpy(elements[1], a0, m);
-    index[binToDec(a0)] = 1;
-
-    for(int i=2; i<n; ++i) {
-        mem_cpy(elements[i], elements[i-1]+1, m-1);
-        int sum=0;
-        for(int j=0; j<m; ++j) {
-                sum += generator[j] * elements[i-1][j];
-        }
-        elements[i][m-1] = sum % 2;
-
-        num = binToDec(elements[i]);
-        if(index[num]){
-        	return false;
-        }else{
-        	index[num] = i;
-        }
-    }
-    return true;
 }
 
 string FiniteField::intArrayToStr(int *ar){
@@ -121,20 +96,4 @@ bool FiniteField::fillZechArray(){
 		return false;
 	}
 	return true;
-}
-
-int FiniteField::getZech(int x){
-	if(zechArray[x]){
-		return zechArray[x];
-	}
-
-	return xorElements(1, 2+x)-1;
-}
-
-int FiniteField::xorElements(int x, int y){
-	return index[xor_elements(elements[x], elements[y], m)];
-}
-
-int FiniteField::binToDec(int *ar){
-	return bin_to_dec(ar, m);
 }
