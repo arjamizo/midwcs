@@ -15,11 +15,14 @@ extern "C"{
 	int abs_modulo(long int x, long int q);
 	int add_elements(int x, int y, int *zech, int n);
 	int	bin_to_dec(int *src, int n);
+	int fill_zech_array(int *zech, int n, int m, int *index, int **elements, int *gen);
 	int generate(int *a0, int *gen, int **elements, int *index, int n, int m);
+	int get_zech(int *zech, int at, int m, int *index, int **elements);
 	void mem_set(int *dst, int x, int n);
 	void mem_cpy(int *dst, int *src, int n);
+	int mul_elements(int x, int y, int n);
 	int powa(long int x, int y);
-	int xor_elements(int *x, int *y, int n);
+	int xor_elements(int *x, int *y, int m, int *index);
 }
 
 class FiniteField {
@@ -35,7 +38,7 @@ private:
     inline int binToDec(int *ar){ return bin_to_dec(ar, m); }
 
     //fills array with Zech's logarithms, returns true if complete
-    bool fillZechArray();
+    inline bool fillZechArray(){ return fill_zech_array(zechArray, n, m, index, elements, generator); }
 
     //returns absolute value of modulo
     inline int absModulo(int x, int q){ return abs_modulo(x, q); }
@@ -47,7 +50,7 @@ public:
 
     //fills elements table with values evaluated from formula s_{j+3}=s_{j}+s_{j+1}
     //return true if complete, unless false
-    bool generate(int *a0){ return ::generate(a0, generator, elements, index, n, m); }
+    inline bool generate(int *a0){ return ::generate(a0, generator, elements, index, n, m); }
 
     //returns the generator as string
     inline string genToStr(){ return intArrayToStr(generator); }
@@ -68,13 +71,17 @@ public:
     inline bool isInitiated()const{ return initiated; }
 
     //returns index of result
-    int xorElements(int x, int y){ return index[xor_elements(elements[x], elements[y], m)]; }
+    inline int xorElements(int x, int y){ return xor_elements(elements[x], elements[y], m, index); }
 
     //return index of result
-    int addElements(int x, int y){ return add_elements(y, x, zechArray, n); }
+    inline int addElements(int x, int y){ return add_elements(x, y, zechArray, n); }
+
+    //return index of result
+    inline int mulElements(int x, int y){ return mul_elements(x, y, n); }
 
     //returns Zech(x)
-    int getZech(int x){ return (zechArray[x] ? zechArray[x] : xorElements(1, 2+x)-1); }
+    inline int getZech(int x){ return get_zech(zechArray, x, m, index, elements); }
 };
 
 #endif /* FINITEFIELD_H_*/
+

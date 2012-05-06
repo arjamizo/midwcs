@@ -43,7 +43,7 @@ add_elements_skip_zero:
 	sub		%rsi, %rax
 	jnz		add_elements_skip_equal
 	xor		%rax, %rax
-	jmp add_elements_finish
+	jmp 	add_elements_finish
 
 add_elements_skip_equal:
 	jns		add_elements_abs
@@ -83,7 +83,154 @@ bin_to_dec_loop:
 	ret
 
 ########################################
-## int generate(int *a0(10), int *gen(11), int **elements(12), int *index(13), int n(8), int m(9));
+## int fill_zech_array(int *zech, int n, int m, int *index, int **elements, int *gen);
+########################################
+
+.globl	fill_zech_array
+	.type	fill_zech_array, @function
+fill_zech_array:
+	mov		%rsi, %r11
+	dec		%r11
+	mov		%rdx, %r12
+	mov		%rdi, %r13
+	mov		$3, %r14
+	xor		%r15, %r15
+
+	xor		%rsi, %rsi
+	mov		%r11, %rdx
+	dec		%rdx
+	call	mem_set
+
+fill_zech_array_check:
+	mov		4(%r9, %r15, 4), %eax
+	inc		%r15
+	and		%rax, %rax
+	jz		fill_zech_array_check
+
+	mov		%r13, %rdi
+	mov		%r15, %rsi
+	mov		%r12, %rdx
+	call	get_zech
+	mov		%eax, (%r13, %r15, 4)
+
+	mov		%r15, %r10
+fill_zech_array_main_loop:
+	cmp		%r14, %r11
+	jl		fill_zech_array_finish
+
+	cmp		%r15, %r10
+	jz		fill_zech_array_skip_search
+fill_zech_array_next_search:
+	mov		(%r13, %r10, 4), %eax
+	and		%rax, %rax
+	jz		fill_zech_array_skip_search
+	inc		%r10
+	jmp		fill_zech_array_next_search
+fill_zech_array_skip_search:
+
+	mov		%r13, %rdi
+	mov		%r10, %rsi
+	mov		%r12, %rdx
+	call	get_zech
+	mov		%rax, %r15
+
+	mov		$1, %rax
+	mov		$2, %rsi
+fill_zech_array_loop_1:
+	push	%rax
+	mov		%r11, %rbx	#q
+	sub		%r10, %rbx	#q-y
+	dec		%rbx		#q-y-1
+	xor		%rdx, %rdx
+	imul	%rbx		#(q-y-1)*2^i
+	idiv	%r11		#(q-y-1)*2^i%q
+	and		%rdx, %rdx
+	jns		fill_zech_array_no_sign_1
+	add		%r11, %rdx	#abs_modulo((q-y-1)*2^i%q, q)
+fill_zech_array_no_sign_1:
+
+	pop		%rax
+	dec		%rdx
+	mov		(%r13, %rdx, 4), %ebx
+	and		%rbx, %rbx
+	jnz		fill_zech_array_loop_1_finish
+
+	push	%rax
+	mov		%rdx, %r9
+	mov		%r15, %rbx	#zech
+	sub		%r10, %rbx	#zech-y
+	dec		%rbx		#zech-y-1
+
+	xor		%rdx, %rdx
+	imul	%rbx		#(zech-y-1)*2^i
+	idiv	%r11		#(zech-y-1)*2^i%q
+	and		%rdx, %rdx
+	jns		fill_zech_array_no_sign_2
+	add		%r11, %rdx	#abs_modulo((zech-y-1)*2^i%q, q)
+fill_zech_array_no_sign_2:
+
+	mov		%edx, (%r13, %r9, 4)
+	inc		%r14
+
+	pop		%rax
+	mul		%rsi
+
+	jmp		fill_zech_array_loop_1
+fill_zech_array_loop_1_finish:
+
+	mov		$2, %rax
+	mov		$2, %rsi
+fill_zech_array_loop_2:
+	push	%rax
+	mov		%r10, %rbx	#y
+	inc		%rbx		#y+1
+	xor		%rdx, %rdx
+	imul	%rbx		#(y+1)*2^i
+	idiv	%r11		#(y+1)*2^i%q
+	and		%rdx, %rdx
+	jns		fill_zech_array_no_sign_3
+	add		%r11, %rdx	#abs_modulo((y+1)*2^i%q, q)
+fill_zech_array_no_sign_3:
+
+	pop		%rax
+	dec		%rdx
+	mov		(%r13, %rdx, 4), %ebx
+	and		%rbx, %rbx
+	jnz		fill_zech_array_loop_2_finish
+
+	push	%rax
+	mov		%rdx, %r9
+	mov		%r15, %rbx	#zech
+	xor		%rdx, %rdx
+	imul	%rbx		#(zech)*2^i
+	idiv	%r11		#(zech)*2^i%q
+	and		%rdx, %rdx
+	jns		fill_zech_array_no_sign_4
+	add		%r11, %rdx	#abs_modulo((zech)*2^i%q, q)
+fill_zech_array_no_sign_4:
+
+	mov		%edx, (%r13, %r9, 4)
+	inc		%r14
+
+	pop		%rax
+	mul		%rsi
+
+	jmp		fill_zech_array_loop_2
+fill_zech_array_loop_2_finish:
+
+	xor		%r15, %r15
+	inc		%r10
+	jmp		fill_zech_array_main_loop
+fill_zech_array_finish:
+
+	mov		%r11, %rax
+	inc		%rax
+	sub		%r14, %rax
+	not		%rax
+	ret
+
+########################################
+## int generate(int *a0, int *gen, int **elements, int *index, int n, int m);
 ########################################
 
 .globl	generate
@@ -164,6 +311,26 @@ generate_finish:
 	ret
 
 ########################################
+## int get_zech(int *zech, int at, int m, int *index, int **elements);
+########################################
+
+.globl	get_zech
+	.type	get_zech, @function
+get_zech:
+	mov		(%rdi, %rsi, 4), %eax
+	and		%rax, %rax
+	jnz		get_zech_finish
+
+	mov		8(%r8), %rdi
+	mov		16(%r8, %rsi, 8), %rsi
+
+	call	xor_elements
+	dec		%rax
+get_zech_finish:
+
+	ret
+
+########################################
 ## void mem_cpy(int *dst, int *src, int n);
 ########################################
 
@@ -193,6 +360,38 @@ mem_set:
 	ret
 
 ########################################
+## int mul_elements(int x, int y, int n);
+########################################
+
+.globl	mul_elements
+	.type	mul_elements, @function
+mul_elements:
+	mov		%rdi, %rax
+
+	and		%rdi, %rdi
+	jz		mul_elements_zero
+	and		%rsi, %rsi
+	jz		mul_elements_zero
+
+	jmp		mul_elements_skip_zero
+mul_elements_zero:
+	xor		%rax, %rax
+	jmp		mul_elements_finish
+mul_elements_skip_zero:
+
+	add		%rsi, %rax
+	sub		$2, %rax
+	dec		%rdx
+	mov		%rdx, %rsi
+	xor		%rdx, %rdx
+	div		%rsi
+	inc		%rdx
+	mov		%rdx, %rax
+mul_elements_finish:
+
+	ret
+
+########################################
 ## int powa(long int x, int y);
 ########################################
 
@@ -211,7 +410,7 @@ powa_finish:
 	ret
 
 ########################################
-## int xor_elements(int *x, int *y, int n);
+## int xor_elements(int *x, int *y, int m, int *index);
 ########################################
 
 .globl	xor_elements
@@ -226,6 +425,8 @@ xor_elements_loop:
 
 	and		%rdx, %rdx
 	jnz		xor_elements_loop
+	mov		(%rcx, %rax, 4), %eax
 
 	ret
+
 

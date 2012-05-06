@@ -83,7 +83,7 @@ string elementsListToStr(FiniteField *ff){
 
 string mulTabToStr(FiniteField *ff){
 	stringstream ss;
-	int n = ff->getElementCount(), k;
+	int n = ff->getElementCount();
 
 	ss << startTable() << startTr() << startTh() << endTh();
 	for(int i=0; i<n; ++i){
@@ -94,12 +94,7 @@ string mulTabToStr(FiniteField *ff){
 		ss << startTr();
 		ss << startTh() << ff->elementsLabelToStr(i) << endTh();
 		for(int j=0; j<n; ++j){
-			if(i && j){
-				k = 1 + (i+j-2) % (n-1);
-			}else{
-				k = 0;
-			}
-			ss << startTd() << ff->elementsLabelToStr(k) << endTd();
+			ss << startTd() << ff->elementsLabelToStr(ff->mulElements(i, j)) << endTd();
 		}
 		ss << endTr();
 	}
@@ -145,3 +140,4 @@ string zechTabToStr(FiniteField *ff){
 
 	return ss.str();
 }
+
