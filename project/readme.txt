@@ -2,6 +2,8 @@
 	required mingw32-make+gcc
 mingw32-make
 
+# v1.1  Wszystkie kluczowe funkcje w asm
+
 # v1.0  Generowanie elementów w asm.
 
 # v0.9  Dodano kolejne funkcje w asm oraz poprawiono wyświetlanie w HTML.
